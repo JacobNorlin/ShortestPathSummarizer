@@ -15,24 +15,30 @@ object Parser {
       ) toMap
   }
 
-  def createGraph(text: List[List[String]]) = {
-    val indexedSentences : List[(List[String], Int)]  = text.zip(Range(1, text.length+1))
+  def indexSentences(text: List[Sentence]) = {
+    text.zip(Range(1, text.length+1))
+  }
 
+  def buildSimilarityMatrix(sentences: List[IndexedSentence], similarityMeasure: (Sentence, Sentence) => Int) = {
+    sentences.map(s1 => {
+      sentences.map(s2 => {
+        if(s1._2 != s2._2)
+          similarityMeasure(s1._1, s2._1)
+        else
+          0 //We dont how many words a sentence shares with itself
+      }) toArray
+    }) toArray
+  }
+
+  def createGraph(text: List[Sentence]) = {
+    val indexedSentences = indexSentences(text)
     val allWords: Set[String] = (for(s <- text;
                                  w <- s) yield w).toSet
     val wordCount: Map[String, Int] = countOfEachWord(text)
 
-    //Sum rows or whatever to get amount of edges for node
-    val similarityMatrix: Array[Array[Int]] = Array.ofDim(indexedSentences.length, indexedSentences.length)
+    val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
+    println(similarityMatrix.deep.mkString("\n"))
 
-    for((s1,i) <- indexedSentences){
-      for((s2,j) <- indexedSentences){
-        val a = similarWords(s1, s2)
-        similarityMatrix(i-1)(j-1) = a
-        print(a)
-      }
-      println()
-    }
 
     val graph = new Graph[(List[String], Int)]()
     //This is to make sure there is at least one path from the first to last sentence

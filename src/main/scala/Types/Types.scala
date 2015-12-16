@@ -8,10 +8,12 @@ import scala.collection.mutable._
  */
 object Types {
 
-  case class Text(sentences: List[Sentence])
-  case class Sentence(words: List[Word])
-  case class Word(word: String)
 
+
+  type Text = List[Sentence]
+  type Sentence = List[Word]
+  type IndexedSentence = (Sentence, Int)
+  type Word = String
 
   class Graph[T] {
     class Node[T](v: T){
