@@ -21,7 +21,7 @@ object Tokenizer {
   }
 
   def getStemmedWords(text: String):List[String] = {
-    text.split(" ") filter(w => w.length > 1) map stemWord toList
+    text.split(" ") filter(w => w.length > 3) map stemWord toList
   }
   def getWords(text: String):List[String] = {
     text.split(" ") toList

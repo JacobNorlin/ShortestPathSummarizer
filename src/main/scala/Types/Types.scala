@@ -73,34 +73,37 @@ object Types {
       p.cost
     }
 
-    def pathsBetween(start: Node, end: Node): Path = {
+    def nPathsBetween(start: Node, end: Node, n: Int): List[Path] = {
       val pq = PriorityQueue.empty[Path]( Ordering.by(pathOrder))
-
+      var shortestPaths = List.empty[Path]
       for(edge <- start.edges){
         println("startingedges" ,edge)
         pq += Path(List(edge.start), edge.end, edge.cost)
       }
 
       var visited = Set.empty[Node]
-
+      var i = 0
       while(pq.nonEmpty){
         val shortestPath = pq.dequeue()
         val currentNode = shortestPath.current
 
-        if(!visited.contains(currentNode)){
-          visited += currentNode
+        if(!shortestPath.nodes.contains(currentNode)){
+          //visited += currentNode
           if(currentNode.equals(end)){
-            return shortestPath
-          }else{
-            val neighbours = currentNode.edges.filterNot(edge => visited.contains(edge.end))
-            for(n <- neighbours){
-              pq += Path(shortestPath.nodes ++ List(currentNode), n.end, shortestPath.cost + n.cost)
-            }
+            i += 1
+            shortestPaths = Path(shortestPath.nodes ++ List(currentNode), currentNode, shortestPath.cost) :: shortestPaths
+            if(n == i)
+              return shortestPaths
           }
+          val neighbours = currentNode.edges.filterNot(edge => visited.contains(edge.end))
+          for(n <- neighbours){
+            pq += Path(shortestPath.nodes ++ List(currentNode), n.end, shortestPath.cost + n.cost)
+          }
+
         }
 
       }
-      null
+      shortestPaths
     }
 
   }

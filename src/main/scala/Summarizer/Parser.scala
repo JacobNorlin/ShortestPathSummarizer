@@ -48,7 +48,6 @@ object Parser {
     val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
     println(similarityMatrix.deep.mkString("\n"))
     val g = buildInitialGraph(indexedSentences)
-    //val graph = new Graph[(List[String], Int)]()
     //This is to make sure there is at least one path from the first to last sentence
 
     for ((s, i) <- indexedSentences) {
@@ -76,7 +75,7 @@ object Parser {
     }
     g.printGraph()
 
-    g.pathsBetween(g.getNodeFromIndex(1), g.getNodeFromIndex(indexedSentences.length)).nodes.map(x => x.value._2-1)
+    g.nPathsBetween(g.getNodeFromIndex(1), g.getNodeFromIndex(indexedSentences.length), 4).map(x1 => x1.nodes.map(x => x.value._2-1))
   }
 
 
