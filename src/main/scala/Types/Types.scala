@@ -8,8 +8,6 @@ import scala.collection.mutable._
  */
 object Types {
 
-
-
   type Text = List[Sentence]
   type Sentence = List[Word]
   type IndexedSentence = (Sentence, Int)

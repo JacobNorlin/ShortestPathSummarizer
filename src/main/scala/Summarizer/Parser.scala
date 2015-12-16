@@ -19,16 +19,18 @@ object Parser {
     text.zip(Range(1, text.length+1))
   }
 
-  def buildSimilarityMatrix(sentences: List[IndexedSentence], similarityMeasure: (Sentence, Sentence) => Int) = {
+  def buildSimilarityMatrix(sentences: List[IndexedSentence], similarityMeasure: (Sentence, Sentence) => Double) = {
     sentences.map(s1 => {
       sentences.map(s2 => {
         if(s1._2 != s2._2)
           similarityMeasure(s1._1, s2._1)
         else
           0 //We dont how many words a sentence shares with itself
-      }) toArray
-    }) toArray
+      })
+    })
   }
+
+
 
   def createGraph(text: List[Sentence]) = {
     val indexedSentences = indexSentences(text)
@@ -37,8 +39,6 @@ object Parser {
     val wordCount: Map[String, Int] = countOfEachWord(text)
 
     val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
-    println(similarityMatrix.deep.mkString("\n"))
-
 
     val graph = new Graph[(List[String], Int)]()
     //This is to make sure there is at least one path from the first to last sentence
