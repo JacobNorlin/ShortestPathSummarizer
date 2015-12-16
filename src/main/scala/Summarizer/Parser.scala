@@ -57,8 +57,6 @@ object Parser {
       }
     }
 
-
-
     for (n1 <- g.nodes) {
       for (n2 <- g.nodes) {
         val t1 = n1.value
@@ -73,9 +71,7 @@ object Parser {
 
 
     }
-    g.printGraph()
-
-    g.nPathsBetween(g.getNodeFromIndex(1), g.getNodeFromIndex(indexedSentences.length), 4).map(x1 => x1.nodes.map(x => x.value._2-1))
+    g
   }
 
 

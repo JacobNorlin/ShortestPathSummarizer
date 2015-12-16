@@ -3,6 +3,8 @@ package Summarizer
 import org.tartarus.snowball._
 import org.tartarus.snowball.ext.swedishStemmer
 
+import scala.util.matching.Regex
+
 /**
  * Created by Jacob on 2015-12-07.
  */
@@ -17,11 +19,12 @@ object Tokenizer {
   }
 
   def getSentences(text:String):List[String] = {
-     text.split('.') toList
+    //This is a very naive sentence boundary. It just checks if there is a capitalized letter after a . ? or !
+    text.split("""[\.\!\?] (?=[A-Z*])""") toList
   }
 
   def getStemmedWords(text: String):List[String] = {
-    text.split(" ") filter(w => w.length > 3) map stemWord toList
+    text.split(" ") filter(w => w.length > 1) map stemWord toList
   }
   def getWords(text: String):List[String] = {
     text.split(" ") toList

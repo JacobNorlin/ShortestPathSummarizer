@@ -17,11 +17,19 @@ object SentenceLikeness {
     sameWords(s1, s2).length toDouble
   }
 
+//  def cosineSimilarity(s1: Sentence, s2: Sentence): Double = {
+//
+//  }
+
 
   def termFrequency(word: String, text: List[Sentence]) : Int = {
-    text.map(s => {
-      termFrequencyInSentence(word, s)
-    }) sum
+    if(word.length >= 4){
+      text.map(s => {
+        termFrequencyInSentence(word, s)
+      }) sum
+    }else
+      0
+
   }
 
   def termFrequencyInSentence(word: String, sentence: Sentence) : Int = {
@@ -50,7 +58,7 @@ object SentenceLikeness {
    */
   def sentenceWeight(sentence:IndexedSentence, text:List[Sentence], similarityMatrix: Array[Array[Double]], wordCount: Map[Word, Int]): Double = {
 
-    val totalWordCount = text.flatten.flatten.length
+    val totalWordCount = text.flatMap(_.map(x => termFrequency(x, text))) sum
     val s = sentence._1
     //Complicated formula
     (1 + sameWords(s, title).length) *
