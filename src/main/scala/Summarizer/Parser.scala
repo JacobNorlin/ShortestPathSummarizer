@@ -26,46 +26,57 @@ object Parser {
           similarityMeasure(s1._1, s2._1)
         else
           0 //We dont how many words a sentence shares with itself
-      })
-    })
+      }) toArray
+    }) toArray
   }
 
+  def buildInitialGraph(sentences: List[IndexedSentence]) = {
+    val g = new UniqueSentenceGraph()
+    for(s <- sentences){
+      g.addNode(s)
+    }
+    g
+  }
 
 
   def createGraph(text: List[Sentence]) = {
     val indexedSentences = indexSentences(text)
-    val allWords: Set[String] = (for(s <- text;
-                                 w <- s) yield w).toSet
+    val allWords: Set[String] = (for (s <- text;
+                                      w <- s) yield w).toSet
     val wordCount: Map[String, Int] = countOfEachWord(text)
 
     val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
-
-    val graph = new Graph[(List[String], Int)]()
+    println(similarityMatrix.deep.mkString("\n"))
+    val g = buildInitialGraph(indexedSentences)
+    //val graph = new Graph[(List[String], Int)]()
     //This is to make sure there is at least one path from the first to last sentence
-    for(s <- indexedSentences){
-      if(s._2 < indexedSentences.length){
-        val next = indexedSentences(s._2)
-        graph.addEdge(s, next, cost(s, next, text, similarityMatrix, wordCount))
-      }
 
+    for ((s, i) <- indexedSentences) {
+      if (i < indexedSentences.length) {
+        val next = indexedSentences(i) //this is dumb because sentences are 1 indexed
+        g.addEdge(g.getNodeFromIndex(i), g.getNodeFromIndex(i + 1), cost((s, i), next, text, similarityMatrix, wordCount))
+      }
     }
 
-    for(n1 <- graph.nodes){
-      for(n2 <- graph.nodes){
+
+
+    for (n1 <- g.nodes) {
+      for (n2 <- g.nodes) {
         val t1 = n1.value
         val t2 = n2.value
         //If sentences are similar they will share an edge
-        if(similarityMatrix(t1._2 -1 )(t2._2 - 1) >= 1 && t1._2 != t2._2){
+        if (similarityMatrix(t1._2 - 1)(t2._2 - 1) >= 1 && t1._2 != t2._2) {
+          println("Adding edge from", t1._2, "to", t2._2)
           val c = cost(t1, t2, text, similarityMatrix, wordCount)
-          graph.addEdge(n1, n2, c)
+          g.addEdge(n1, n2, c)
         }
       }
 
+
     }
+    g.printGraph()
 
-    graph.printGraph()
-    graph.pathsBetween(graph.nodes.last, graph.nodes.head).path.map(x => x.value._2-1)
-
+    g.pathsBetween(g.getNodeFromIndex(1), g.getNodeFromIndex(indexedSentences.length)).nodes.map(x => x.value._2-1)
   }
 
 

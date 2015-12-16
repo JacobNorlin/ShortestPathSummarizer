@@ -11,7 +11,8 @@ object Main extends App{
     val tokenizedStemmedText = getStemmedSentencesAndWords(testText.toLowerCase())
     val tokenizedText = getSentences(testText)
 
-    val summary = createGraph(tokenizedStemmedText).distinct.sorted
+    val summary = createGraph(tokenizedStemmedText).sorted
+    println(summary)
     for(i <- summary){
         println(tokenizedText(i))
     }

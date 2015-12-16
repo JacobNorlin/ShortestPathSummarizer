@@ -48,7 +48,7 @@ object SentenceLikeness {
    * @param wordCount
    * @return
    */
-  def sentenceWeight(sentence:IndexedSentence, text:List[Sentence], similarityMatrix: List[List[Double]], wordCount: Map[Word, Int]): Double = {
+  def sentenceWeight(sentence:IndexedSentence, text:List[Sentence], similarityMatrix: Array[Array[Double]], wordCount: Map[Word, Int]): Double = {
 
     val totalWordCount = text.flatten.flatten.length
     val s = sentence._1
@@ -58,7 +58,7 @@ object SentenceLikeness {
     early(text.indexOf(s)) * Math.sqrt(1 + similarityMatrix(sentence._2 - 1).count(_ > 0) - 1)
   }
 
-  def cost(s1: IndexedSentence, s2: IndexedSentence, text:List[Sentence], similarityMatrix: List[List[Double]], wordCount: Map[Word, Int]) = {
+  def cost(s1: IndexedSentence, s2: IndexedSentence, text:List[Sentence], similarityMatrix: Array[Array[Double]], wordCount: Map[Word, Int]) = {
     val i = s1._2 - 1
     val j = s2._2 - 1
     Math.pow((i - j),2) / (similarityMatrix(i)(j) * sentenceWeight(s2, text, similarityMatrix, wordCount))
