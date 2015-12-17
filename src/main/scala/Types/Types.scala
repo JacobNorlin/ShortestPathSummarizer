@@ -85,11 +85,12 @@ object Types {
       while(pq.nonEmpty){
         val shortestPath = pq.dequeue()
         val currentNode = shortestPath.current
-        println(shortestPath.current.value._2)
+        //println(shortestPath.current.value._2)
         if(!shortestPath.nodes.contains(currentNode)){
 
           //visited += currentNode
           if(currentNode.equals(end)){
+            println("found path")
             i += 1
             shortestPaths = Path(shortestPath.nodes ++ List(currentNode), currentNode, shortestPath.cost) :: shortestPaths
             if(n == i){

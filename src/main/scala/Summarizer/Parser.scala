@@ -39,12 +39,12 @@ object Parser {
   }
 
 
-  def createGraph(text: List[Sentence]) = {
+  def createGraph(text: List[Sentence], title: Sentence) = {
     val indexedSentences = indexSentences(text)
     val allWords: Set[String] = (for (s <- text;
                                       w <- s) yield w).toSet
     val wordCount: Map[String, Int] = countOfEachWord(text)
-    val title = indexedSentences.head._1 // SHould replace this with smarter way of getting title
+    //val title = text.head // SHould replace this with smarter way of getting title
     val totalWordCount = text.flatMap(_.map(x => termFrequency(x, text))) sum
     val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
     //println(similarityMatrix.deep.mkString("\n"))
@@ -70,7 +70,7 @@ object Parser {
         }
       }
     }
-    g.printGraph()
+    //g.printGraph()
 
     println("Graph constructed")
     g

@@ -13,9 +13,13 @@ object Main extends App{
 
   val sum = new Summarizer()
 
-  println(sum.summarizeDocument("test.txt",  200))
+  println(sum.summarizeDocument("test6",  100))
 
   class Summarizer(){
+
+    def summarizeAnnotatedDocument(path:String, targetWordCount: Int) = {
+
+    }
 
     def summarizeDocument(path: String, targetWordCount: Int) = {
       val text = scala.io.Source.fromFile(path)("UTF-8").getLines.reduceLeft(_+_)
@@ -43,14 +47,17 @@ object Main extends App{
     }
 
     def constructSummaries(text: String) = {
-      val tokenizedAndStemmedText = getStemmedSentencesAndWords(text).map(_.map(_.toLowerCase()))
-      val tokenizedText = getSentences(text)
-      val graph: UniqueSentenceGraph = createGraph(tokenizedAndStemmedText)
+      var tokenizedAndStemmedText = getStemmedSentencesAndWords(text).map(_.map(_.toLowerCase()))
+      val tokenizedText = getSentences(text).tail
+      val title = tokenizedAndStemmedText.head
+      val graph: UniqueSentenceGraph = createGraph(tokenizedAndStemmedText.tail, title)
 
       val firstSentenceNode = graph.getNodeFromIndex(1)
-      val lastSentenceNode = graph.getNodeFromIndex(tokenizedAndStemmedText.length)
 
-      val sentencePaths = graph.nPathsBetween(firstSentenceNode, lastSentenceNode, 8)
+      println(firstSentenceNode.value._1)
+      val lastSentenceNode = graph.getNodeFromIndex(tokenizedAndStemmedText.length -1)
+
+      val sentencePaths = graph.nPathsBetween(firstSentenceNode, lastSentenceNode, 4)
       println(sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1)) mkString "\n")
       //Construct list of all summaries
       val summaries = sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1).sorted)//First convert paths into lists of sentenceIndexes
