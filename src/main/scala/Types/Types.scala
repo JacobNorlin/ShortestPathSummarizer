@@ -34,7 +34,7 @@ object Types {
         case _ => false
       }
       override def toString: String = {
-        "" + start.value + "->("+cost+")" + end.value
+        "" + start.value._2 + "->("+cost+")-> " + end.value._2
       }
     }
     case class Path(nodes: List[Node], current: Node, cost: Double)
@@ -77,7 +77,6 @@ object Types {
       val pq = PriorityQueue.empty[Path]( Ordering.by(pathOrder))
       var shortestPaths = List.empty[Path]
       for(edge <- start.edges){
-        println("startingedges" ,edge)
         pq += Path(List(edge.start), edge.end, edge.cost)
       }
 
@@ -86,22 +85,23 @@ object Types {
       while(pq.nonEmpty){
         val shortestPath = pq.dequeue()
         val currentNode = shortestPath.current
-
+        println(shortestPath.current.value._2)
         if(!shortestPath.nodes.contains(currentNode)){
+
           //visited += currentNode
           if(currentNode.equals(end)){
             i += 1
             shortestPaths = Path(shortestPath.nodes ++ List(currentNode), currentNode, shortestPath.cost) :: shortestPaths
-            if(n == i)
+            if(n == i){
               return shortestPaths
+            }
+
           }
-          val neighbours = currentNode.edges.filterNot(edge => visited.contains(edge.end))
+          val neighbours = currentNode.edges
           for(n <- neighbours){
             pq += Path(shortestPath.nodes ++ List(currentNode), n.end, shortestPath.cost + n.cost)
           }
-
         }
-
       }
       shortestPaths
     }

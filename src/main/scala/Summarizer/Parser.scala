@@ -44,18 +44,20 @@ object Parser {
     val allWords: Set[String] = (for (s <- text;
                                       w <- s) yield w).toSet
     val wordCount: Map[String, Int] = countOfEachWord(text)
-
+    val title = indexedSentences.head._1 // SHould replace this with smarter way of getting title
+    val totalWordCount = text.flatMap(_.map(x => termFrequency(x, text))) sum
     val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
-    println(similarityMatrix.deep.mkString("\n"))
+    //println(similarityMatrix.deep.mkString("\n"))
     val g = buildInitialGraph(indexedSentences)
     //This is to make sure there is at least one path from the first to last sentence
 
     for ((s, i) <- indexedSentences) {
       if (i < indexedSentences.length) {
         val next = indexedSentences(i) //this is dumb because sentences are 1 indexed
-        g.addEdge(g.getNodeFromIndex(i), g.getNodeFromIndex(i + 1), cost((s, i), next, text, similarityMatrix, wordCount))
+        g.addEdge(g.getNodeFromIndex(i), g.getNodeFromIndex(i + 1), cost((s, i), next, text, similarityMatrix, wordCount, title, totalWordCount))
       }
     }
+    println("inital graph done")
 
     for (n1 <- g.nodes) {
       for (n2 <- g.nodes) {
@@ -63,14 +65,14 @@ object Parser {
         val t2 = n2.value
         //If sentences are similar they will share an edge
         if (similarityMatrix(t1._2 - 1)(t2._2 - 1) >= 1 && t1._2 != t2._2) {
-          println("Adding edge from", t1._2, "to", t2._2)
-          val c = cost(t1, t2, text, similarityMatrix, wordCount)
+          val c = cost(t1, t2, text, similarityMatrix, wordCount, title, totalWordCount)
           g.addEdge(n1, n2, c)
         }
       }
-
-
     }
+    g.printGraph()
+
+    println("Graph constructed")
     g
   }
 

@@ -18,7 +18,7 @@ val testText = "Dottern Susanna gifte sig 1607 med John Hall, en berömd läkare
 
   val sum = new Summarizer()
 
-  println(sum.summarizeDocument("test.txt",  100))
+  println(sum.summarizeDocument("test.txt",  500))
 
   class Summarizer(){
 
@@ -45,15 +45,15 @@ val testText = "Dottern Susanna gifte sig 1607 med John Hall, en berömd läkare
     def constructSummaries(text: String) = {
       val tokenizedAndStemmedText = getStemmedSentencesAndWords(text).map(_.map(_.toLowerCase()))
       val tokenizedText = getSentences(text)
-      println(tokenizedText mkString "\n")
       val graph: UniqueSentenceGraph = createGraph(tokenizedAndStemmedText)
 
       val firstSentenceNode = graph.getNodeFromIndex(1)
       val lastSentenceNode = graph.getNodeFromIndex(tokenizedAndStemmedText.length)
 
       val sentencePaths = graph.nPathsBetween(firstSentenceNode, lastSentenceNode, 8)
+      println(sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1)) mkString "\n")
       //Construct list of all summaries
-      val summaries = sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1))//First convert paths into lists of sentenceIndexes
+      val summaries = sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1).sorted)//First convert paths into lists of sentenceIndexes
         .map(path => {
         convertPathToSummary(path, tokenizedText)
         })
