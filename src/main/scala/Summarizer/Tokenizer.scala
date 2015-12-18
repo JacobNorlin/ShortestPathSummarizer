@@ -13,11 +13,13 @@ object Tokenizer {
   val stemmer = new swedishStemmer()
 
   def stemWord(word: String): String = {
+    //This is gr8
     stemmer.setCurrent(word)
     stemmer.stem()
     stemmer.getCurrent()
   }
 
+  //Does not work, is not used. Should return all sentences annotated by <h></h>
   def getHeaders(text: String) = {
     val regex = new Regex("""<h>[a-zA-Z0-9\W]*<\/h>""")
 
@@ -28,7 +30,6 @@ object Tokenizer {
 
   def getSentences(text:String):List[String] = {
     //This is a very naive sentence boundary. It just checks if there is a capitalized letter after a . ? or !
-
     text.split("""[\.\!\?] (?=[A-Z*])""") toList
   }
 

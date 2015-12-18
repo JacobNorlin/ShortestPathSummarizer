@@ -8,6 +8,11 @@ import Summarizer.SentenceLikeness._
 
 object Parser {
 
+  /**
+   * Creates a map(dictionary) of how many times each word occurs
+   * @param text
+   * @return
+   */
   def countOfEachWord(text: List[List[String]]) = {
     (for(s <- text;
          w <- s)
@@ -20,16 +25,22 @@ object Parser {
   }
 
   def buildSimilarityMatrix(sentences: List[IndexedSentence], similarityMeasure: (Sentence, Sentence) => Double) = {
+    //maps each sentence pair to its similarity value
     sentences.map(s1 => {
       sentences.map(s2 => {
         if(s1._2 != s2._2)
           similarityMeasure(s1._1, s2._1)
         else
-          0 //We dont how many words a sentence shares with itself
+          0 //We dont care how many words a sentence shares with itself
       }) toArray
     }) toArray
   }
 
+  /**
+   * Constructs a node for each sentence
+   * @param sentences
+   * @return
+   */
   def buildInitialGraph(sentences: List[IndexedSentence]) = {
     val g = new UniqueSentenceGraph()
     for(s <- sentences){
@@ -44,16 +55,14 @@ object Parser {
     val allWords: Set[String] = (for (s <- text;
                                       w <- s) yield w).toSet
     val wordCount: Map[String, Int] = countOfEachWord(text)
-    //val title = text.head // SHould replace this with smarter way of getting title
     val totalWordCount = text.flatMap(_.map(x => termFrequency(x, text))) sum
     val similarityMatrix = buildSimilarityMatrix(indexedSentences, similarWords)
-    //println(similarityMatrix.deep.mkString("\n"))
     val g = buildInitialGraph(indexedSentences)
     //This is to make sure there is at least one path from the first to last sentence
 
     for ((s, i) <- indexedSentences) {
       if (i < indexedSentences.length) {
-        val next = indexedSentences(i) //this is dumb because sentences are 1 indexed
+        val next = indexedSentences(i) //this is because sentences are 1 indexed
         g.addEdge(g.getNodeFromIndex(i), g.getNodeFromIndex(i + 1), cost((s, i), next, text, similarityMatrix, wordCount, title, totalWordCount))
       }
     }
@@ -70,7 +79,6 @@ object Parser {
         }
       }
     }
-    //g.printGraph()
 
     println("Graph constructed")
     g
