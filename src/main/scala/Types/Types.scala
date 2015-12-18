@@ -37,7 +37,12 @@ object Types {
         "" + start.value._2 + "->("+cost+")-> " + end.value._2
       }
     }
-    case class Path(nodes: List[Node], current: Node, cost: Double)
+    case class Path(nodes: List[Node], current: Node, cost: Double){
+      override def equals(o: Any) = o match{
+        case that: Path => that.nodes.map(n => n.value._2).sorted.equals(this.nodes.map(n=>n.value._2))
+        case _ => false
+      }
+    }
 
     type nextStep = (Int, Node, List[Node])
 
@@ -80,19 +85,24 @@ object Types {
         pq += Path(List(edge.start), edge.end, edge.cost)
       }
 
-      var visited = Set.empty[Node]
+      var pathsWithLoops = Set.empty[Path]
       var i = 0
       while(pq.nonEmpty){
         val shortestPath = pq.dequeue()
         val currentNode = shortestPath.current
-        //println(shortestPath.current.value._2)
-        if(!shortestPath.nodes.contains(currentNode)){
 
+        val currentPath = Path(shortestPath.nodes ++ List(currentNode), currentNode, shortestPath.cost)
+        //Avoid all paths with loops
+        if(shortestPath.nodes.contains(currentNode)){
+          pathsWithLoops += currentPath
+
+        }
+        if(!pathsWithLoops.contains(currentPath)){
           //visited += currentNode
           if(currentNode.equals(end)){
             println("found path")
             i += 1
-            shortestPaths = Path(shortestPath.nodes ++ List(currentNode), currentNode, shortestPath.cost) :: shortestPaths
+            shortestPaths = currentPath :: shortestPaths
             if(n == i){
               return shortestPaths
             }

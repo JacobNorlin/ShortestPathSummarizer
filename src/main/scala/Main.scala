@@ -49,6 +49,7 @@ object Main extends App{
     def constructSummaries(text: String) = {
       var tokenizedAndStemmedText = getStemmedSentencesAndWords(text).map(_.map(_.toLowerCase()))
       val tokenizedText = getSentences(text).tail
+      getHeaders(text)
       val title = tokenizedAndStemmedText.head
       val graph: UniqueSentenceGraph = createGraph(tokenizedAndStemmedText.tail, title)
 
@@ -57,7 +58,7 @@ object Main extends App{
       println(firstSentenceNode.value._1)
       val lastSentenceNode = graph.getNodeFromIndex(tokenizedAndStemmedText.length -1)
 
-      val sentencePaths = graph.nPathsBetween(firstSentenceNode, lastSentenceNode, 4)
+      val sentencePaths = graph.nPathsBetween(firstSentenceNode, lastSentenceNode, 16)
       println(sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1)) mkString "\n")
       //Construct list of all summaries
       val summaries = sentencePaths.map(x1 => x1.nodes.map(x => x.value._2-1).sorted)//First convert paths into lists of sentenceIndexes

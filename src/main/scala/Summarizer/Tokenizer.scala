@@ -18,8 +18,17 @@ object Tokenizer {
     stemmer.getCurrent()
   }
 
+  def getHeaders(text: String) = {
+    val regex = new Regex("""<h>[a-zA-Z0-9\W]*<\/h>""")
+
+    for(m <- regex.findAllIn(text)){
+      println(m)
+    }
+  }
+
   def getSentences(text:String):List[String] = {
     //This is a very naive sentence boundary. It just checks if there is a capitalized letter after a . ? or !
+
     text.split("""[\.\!\?] (?=[A-Z*])""") toList
   }
 
