@@ -5,4 +5,4 @@ Based on this paper: https://www.nada.kth.se/~jsh/publications/shortpath.pdf
 
 For course DD2418.
 
-Current implemetation is bad but should work, will be rewritten.
+Should probably be rewritten to me more scalaish as an exercise.
