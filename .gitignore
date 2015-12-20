@@ -18,5 +18,5 @@ project/plugins/project/
 *.iml
 *.ipr
 *.iws
-.idea
+.idea/
 out

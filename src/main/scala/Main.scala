@@ -6,12 +6,9 @@ import Summarizer.Parser._
 import Summarizer.Tokenizer._
 import Types.Types._
 
-import scala.reflect.io.File
 
 object Main extends App{
 
-
-  val sum = new Summarizer()
 
   override def main(args: Array[String]) = {
     var path: String = ""

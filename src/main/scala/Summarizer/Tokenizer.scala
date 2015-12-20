@@ -1,6 +1,5 @@
 package Summarizer
 
-import org.tartarus.snowball._
 import org.tartarus.snowball.ext.swedishStemmer
 
 import scala.util.matching.Regex

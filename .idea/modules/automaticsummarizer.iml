@@ -23,9 +23,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.11.7:jar" level="project" />
-    <orderEntry type="library" name="SBT: com.assembla.scala-incubator:graph-core_2.11:1.9.4:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scala-lang:scala-reflect:2.11.7:jar" level="project" />
-    <orderEntry type="library" name="SBT: org.scalaz:scalaz-core_2.11:7.2.0:jar" level="project" />
-    <orderEntry type="library" name="snowball-20051019" level="project" />
+    <orderEntry type="module-library">
+      <library name="SBT: unmanaged-jars">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../lib/snowball-20051019.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
